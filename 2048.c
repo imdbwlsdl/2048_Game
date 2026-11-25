@@ -173,15 +173,14 @@ void init_game(void)
     {
         for(int j=0; j<SIZE; j++) // j=열 (왼에서 오로))
         {
-            board[i][j] = 0; // 그냥 0을 넣기
+            board[i][j] = 0; // 그냥 0을 넣기 (화면상에는 .)
         }
-        printf("\n");
     }
     // 점수랑 축하 메시지 기록 초기화
     score = 0;
     won_shown = 0;
 
-    // 숫자 2개 놓기
+    // 숫자 2개 놓기 - 기본값 세팅
     add_random_tile();
     add_random_tile();
 
