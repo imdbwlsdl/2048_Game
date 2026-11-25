@@ -119,11 +119,8 @@ int main(void)
      *
      *  1일차에는 메뉴 없이 그냥 play_game(); 한 줄만 두고 게임부터 테스트하자.
      */
-    board[0][0] = 2;
-    board[1][2] = 128;
-    board[3][3] = 2048;
+    init_game();
     print_board();
-    play_game();
 
     return 0;
 }
@@ -171,6 +168,23 @@ void clear_input_buffer(void)
  */
 void init_game(void)
 {
+    // printf("Score: %d\n\n", score);
+    for (int i=0; i<SIZE; i++) // i=행 (위에서 아래로)
+    {
+        for(int j=0; j<SIZE; j++) // j=열 (왼에서 오로))
+        {
+            board[i][j] = 0; // 그냥 0을 넣기
+        }
+        printf("\n");
+    }
+    // 점수랑 축하 메시지 기록 초기화
+    score = 0;
+    won_shown = 0;
+
+    // 숫자 2개 놓기
+    add_random_tile();
+    add_random_tile();
+
 }
 
 /* 판과 점수 출력
@@ -213,7 +227,37 @@ void print_board(void)
  */
 int add_random_tile(void)
 {
-    return 0; // 임시
+    int empty[SIZE * SIZE];   // 빈칸 위치들을 담을 배열 (최대 16칸)
+    int count = 0;            // 지금까지 찾은 빈칸 개수
+    // 1. 빈칸 모으기
+    for (int i=0; i<SIZE; i++)
+        for (int j=0; j<SIZE; j++)
+            {
+                if (board[i][j] == 0) // 이 칸이 비어있으면?
+                {
+                    empty[count] = i * SIZE + j; // 칸 번호 저장
+                    count++; // 개수 하나 늘리기
+                }
+            }
+    // 2. 빈칸이 하나도 없으면 못 놓으니까 끝
+    if (count == 0)
+        return 0;
+    
+    // 3. 목록에서 하나 뽑기
+    int pick = empty[rand() % count];
+    
+    // 4. 자리 번호 -> (몇번째 줄, 몇번째 칸)으로 바꾸기
+    int r = pick / SIZE; // 몫 = 줄
+    int c = pick % SIZE; // 나머지 = 칸
+
+    // 5. 10%는 4, 90%는 2
+    if (rand() % 10 == 0) // 10번 중 1번
+        board[r][c] = 4;
+    else                  // 10번 중 9번
+        board[r][c] = 2;
+
+    return 1; // 놓는데 성공!
+
 }
 
 /* ★ 핵심 함수 ★  한 줄을 왼쪽으로 밀고 합치기
