@@ -15,6 +15,13 @@
  * 컴파일:  gcc -Wall -o 2048 2048.c
  * 실행:    ./2048
  *
+ * 폴더 위치:
+ * cd "/Users/yujin/Desktop/SMU/2026/26 3-2/컴프 컴프실/컴프실/기말과제_2048"
+ * 깃허브 저장:
+ * git add 2048.c
+ * git commit -m "print_board 구현"
+ * git push
+ * 
  * TODO 라고 적힌 곳이 네가 채울 부분이야.
  * 지금은 컴파일만 되도록 return 0; 같은 임시 코드가 들어가 있어.
  */
@@ -112,6 +119,10 @@ int main(void)
      *
      *  1일차에는 메뉴 없이 그냥 play_game(); 한 줄만 두고 게임부터 테스트하자.
      */
+    board[0][0] = 2;
+    board[1][2] = 128;
+    board[3][3] = 2048;
+    print_board();
     play_game();
 
     return 0;
@@ -172,6 +183,19 @@ void init_game(void)
  */
 void print_board(void)
 {
+    printf("Score: %d\n\n", score);
+    for (int i=0; i<SIZE; i++) // i=행 (위에서 아래로)
+    {
+        for(int j=0; j<SIZE; j++) // j=열 (왼에서 오로))
+        {
+            if (board[i][j] == 0)
+                printf("    .");
+            else
+                printf("%5d", board[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n[w]위 [a]왼쪽 [s]아래 [d]오른쪽  [q]종료\n");
 }
 
 /* 빈칸 하나에 2 또는 4 놓기
