@@ -120,11 +120,11 @@ int main(void)
      *
      *  1일차에는 메뉴 없이 그냥 play_game(); 한 줄만 두고 게임부터 테스트하자.
      */
-    init_game();
+    board[0][0] = 2;
+    board[0][3] = 4;
     print_board();
-    int test[SIZE] = {4, 4, 8, 8};
-    int got = slide_row(test);
-    printf("%d %d %d %d  점수: %d\n", test[0], test[1], test[2], test[3], got);
+    rotate_board();
+    print_board();
 
     return 0;
 }
@@ -334,6 +334,17 @@ int slide_row(int row[SIZE])
  */
 void rotate_board(void)
 {
+    int tmp[SIZE][SIZE]; // 돌린 결과를 적을 새 판
+
+    // 1. 새 판 채우기
+    for (int r=0; r<SIZE; r++)
+        for (int c=0; c<SIZE; c++)
+            tmp[r][c] = board[SIZE - 1 -c][r];
+    
+    // 2. 새 판을 원래 판에 복사
+    for (int r=0; r<SIZE; r++)
+        for (int c=0; c<SIZE; c++)
+            board[r][c] = tmp[r][c];
 }
 
 /* 한 방향으로 이동

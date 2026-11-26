@@ -82,7 +82,7 @@ gcc -Wall -o 2048 2048.c
 - [x] 랜덤 타일 생성 (`add_random_tile`)
 - [x] 게임 초기화 (`init_game`)
 - [x] 한 줄 밀기 (`slide_row`)
-- [ ] 판 회전 (`rotate_board`)
+- [x] 판 회전 (`rotate_board`)
 - [ ] 4방향 이동 (`move`)
 - [ ] 게임 오버 판정 (`can_move`)
 - [ ] 게임 루프 (`play_game`)
