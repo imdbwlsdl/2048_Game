@@ -86,6 +86,7 @@ int  move(char dir);
 int  get_max_tile(void);
 int  can_move(void);
 void play_game(void);
+void compress_row(int row[SIZE]);
 
 // PART 2: 회원 (2일차)
 int  id_exists(const char *id);
@@ -279,6 +280,24 @@ int add_random_tile(void)
  *   [2 4 8 16]→ 그대로       점수 0
  *   [4 4 8 8] → [8 16 0 0]  점수 24
  */
+void compress_row(int row[SIZE])
+{
+    int tmp[SIZE] = {0}; // 전부 0으로 시작하는 새 종이 -> 4칸짜리 배열이고 0으로 채워져있음
+    int pos = 0; // tmp에 다음에 쓸 자리
+
+    for (int k=0; k<SIZE; k++)
+    {
+        if (row[k] != 0) // 읽고 있는 칸이 0이 아니면
+        {
+            tmp[pos] = row[k]; // 쓸 자리에 옮겨 적고
+            pos++; // 쓸 자리를 한 칸 옆으로
+        }
+    }
+    // 칸마다 그대로 복사
+    for (int k=0; k<SIZE; k++)
+        row[k] = tmp[k];
+}
+
 int slide_row(int row[SIZE])
 {
     return 0; // 임시
