@@ -19,7 +19,7 @@
  * cd "/Users/yujin/Desktop/SMU/2026/26 3-2/컴프 컴프실/컴프실/기말과제_2048"
  * 깃허브 저장:
  * git add 2048.c
- * git commit -m "print_board 구현"
+ * git commit -m " ~ 구현"
  * git push
  * 
  * TODO 라고 적힌 곳이 네가 채울 부분이야.
@@ -122,6 +122,9 @@ int main(void)
      */
     init_game();
     print_board();
+    int test[SIZE] = {4, 4, 8, 8};
+    int got = slide_row(test);
+    printf("%d %d %d %d  점수: %d\n", test[0], test[1], test[2], test[3], got);
 
     return 0;
 }
@@ -300,7 +303,23 @@ void compress_row(int row[SIZE])
 
 int slide_row(int row[SIZE])
 {
-    return 0; // 임시
+    int gained = 0; // 이번에 얻은 점수
+
+    compress_row(row); // 1. 당기기
+
+    for (int k=0; k<SIZE-1; k++) // 2. 합치기
+    {
+        if (row[k] != 0 && row[k] == row[k+1]) // 0이 아니고, 오른쪽 칸이랑 같으면 
+        {
+            row[k] = row[k] * 2 ; // 두 배로, row[k] + row[k + 1]
+            gained += row[k]; // 합쳐진 값만큼 점수에 더
+
+            row[k+1] = 0; // 오른쪽 칸은 비우기
+        }
+    }
+    compress_row(row); // 3. 다시 당기기
+
+    return gained;
 }
 
 /* 판을 시계 방향으로 90도 돌리기
