@@ -85,7 +85,7 @@ gcc -Wall -o 2048 2048.c
 - [x] 판 회전 (`rotate_board`)
 - [x] 4방향 이동 (`move`)
 - [x] 게임 오버 판정 (`can_move`)
-- [ ] 게임 루프 (`play_game`)
+- [x] 게임 루프 (`play_game`)
 
 **회원 / 기록**
 - [ ] 회원가입, 로그인

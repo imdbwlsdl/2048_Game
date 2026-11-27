@@ -120,11 +120,8 @@ int main(void)
      *
      *  1일차에는 메뉴 없이 그냥 play_game(); 한 줄만 두고 게임부터 테스트하자.
      */
-    board[2][0] = 2;
-    board[3][0] = 2;
-    print_board();
-    printf("바뀜? %d\n", move('s'));
-    print_board();
+
+    play_game();
 
     return 0;
 }
@@ -157,6 +154,10 @@ void clear_screen(void)
  */
 void clear_input_buffer(void)
 {
+    int ch;   // 꺼낸 글자 (EOF를 담으려고 char 대신 int)
+
+    while ((ch = getchar()) != '\n' && ch != EOF)
+        ;     // 아무것도 안 함 = 그냥 버림
 }
 
 
@@ -405,7 +406,14 @@ int move(char dir)
 /* 판에서 가장 큰 숫자 (기록 저장용, 2048 달성 확인용) */
 int get_max_tile(void)
 {
-    return 0; // 임시
+    int max = 0; // 지금까지 본 것 중 제일 큰 수
+
+    for (int i=0; i<SIZE; i++)
+        for (int j=0; j<SIZE; j++)
+            if (board[i][j] > max) // 이 칸이 지금 max보다 크면
+                max = board[i][j];
+
+    return max;
 }
 
 /* 아직 움직일 수 있는지 (게임 오버 판정)
@@ -420,7 +428,17 @@ int get_max_tile(void)
  */
 int can_move(void)
 {
-    return 0; // 임시
+    for (int i=0; i<SIZE; i++)
+        for (int j=0; j<SIZE; j++)
+            {
+                if (board[i][j] == 0) // 빈칸이 있다
+                    return 1;
+                if (j < SIZE - 1 && board[i][j] == board[i][j+1]) // 오른쪽 칸이랑 같다
+                    return 1;
+                if (i < SIZE - 1 && board[i][j] == board[i+1][j]) // 아래 칸이랑 같다
+                    return 1;
+            }
+    return 0; // 위 경우가 하나도 없으면 -> 게임 오버
 }
 
 /* 게임 한 판
@@ -441,6 +459,38 @@ int can_move(void)
  */
 void play_game(void)
 {
+    char key;
+    init_game(); // 게임 준비 (판 지우고 타일 2개)
+
+    while (1) // 끝날때까지 계속 반복
+    {
+        clear_screen();
+        print_board(); // 판 출력
+        
+        // 2048을 처음 만들었을때만 축하 (게음은 계속!)
+        if (won_shown == 0 && get_max_tile() >= WIN_TILE)
+        {
+            printf("\n🎉 2048 달성! 계속 플레이할 수 있어요!\n");
+            won_shown = 1; // 다시는 안 띄우게 표시
+        }
+        // 더 못 움직이면 게임 오버
+        if (can_move() == 0)
+        {
+            printf("\n게임 오버!\n");
+            break;                    // while 탈출
+        }
+
+        printf("입력: ");
+        scanf(" %c", &key); // %c 앞 공백 = 남은 줄바꿈 건너뛰기
+        clear_input_buffer(); // 나머지 입력 버리기
+
+        if (key == 'q') // q면 그만
+            break; 
+
+        if (move(key)) // 판이 바뀌었으면
+            add_random_tile(); // 새 타일 하나
+    }
+    printf("\n최종 점수: %d\n", score);
 }
 
 
