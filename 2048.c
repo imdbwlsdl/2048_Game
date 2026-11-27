@@ -18,7 +18,7 @@
  * 폴더 위치:
  * cd "/Users/yujin/Desktop/SMU/2026/26 3-2/컴프 컴프실/컴프실/기말과제_2048"
  * 깃허브 저장:
- * git add 2048.c
+ * git add 2048.c README.md
  * git commit -m " ~ 구현"
  * git push
  * 
@@ -120,10 +120,10 @@ int main(void)
      *
      *  1일차에는 메뉴 없이 그냥 play_game(); 한 줄만 두고 게임부터 테스트하자.
      */
-    board[0][0] = 2;
-    board[0][3] = 4;
+    board[2][0] = 2;
+    board[3][0] = 2;
     print_board();
-    rotate_board();
+    printf("바뀜? %d\n", move('s'));
     print_board();
 
     return 0;
@@ -366,7 +366,40 @@ void rotate_board(void)
  */
 int move(char dir)
 {
-    return 0; // 임시
+    int before[SIZE][SIZE]; // 움직이기 전 판 (나중에 비교용)
+    int turns; // 먼저 몇 번 돌릴지
+
+    // 1. 움직이기 전 판을 before에 베끼기
+    for (int i=0; i<SIZE; i++)
+        for (int j=0; j<SIZE; j++)
+            before[i][j] = board[i][j];
+    
+    // 2. 방향에 따라 회전 횟수 정하기
+    if (dir == 'a')    turns = 0;
+    else if (dir == 's')    turns = 1;
+    else if (dir == 'd')    turns = 2;
+    else if (dir == 'w')    turns = 3;
+    else return 0; // wasd가 아니면 아무것도 안 함
+
+    // 3. 돌리기
+    for (int t=0; t<turns; t++)
+        rotate_board();
+    
+    // 4) 모든 줄을 왼쪽으로 밀고, 얻은 점수는 score에 더하기
+    for (int i = 0; i < SIZE; i++)
+        score += slide_row(board[i]);
+
+    // 5) 원래 방향으로 돌려놓기
+    for (int t = 0; t < 4 - turns; t++)
+        rotate_board();
+
+    // 6) before랑 board가 한 칸이라도 다르면 "바뀜(1)"
+    for (int i = 0; i < SIZE; i++)
+        for (int j = 0; j < SIZE; j++)
+            if (before[i][j] != board[i][j])
+                return 1;
+
+    return 0;
 }
 
 /* 판에서 가장 큰 숫자 (기록 저장용, 2048 달성 확인용) */
